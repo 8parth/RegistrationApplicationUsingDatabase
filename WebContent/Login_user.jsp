@@ -22,7 +22,7 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" name="sub" value="Sign up!"/></td>
+				<td><input type="submit" name="sub" value="Log in!"/></td>
 				<td></td>
 			</tr>
 		</table>

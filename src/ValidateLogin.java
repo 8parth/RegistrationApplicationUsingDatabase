@@ -1,6 +1,6 @@
 
-
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,65 +21,79 @@ import com.mysql.jdbc.ResultSet;
 @WebServlet("/ValidateLogin")
 public class ValidateLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ValidateLogin() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ValidateLogin() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String uname = request.getParameter("un");
 		String passwd = request.getParameter("passwd");
-		
+
 		// Database conntection
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection c;
-			c = DriverManager.getConnection(
-					"jdbc:mysql://localhost/tab_emp", "root", "root");
+			c = DriverManager.getConnection("jdbc:mysql://localhost/tab_emp",
+					"root", "root");
 
 			Statement s = c.createStatement();
 
-			ResultSet rs = (ResultSet) s.executeQuery("select * from customer where un =" +uname );
+			ResultSet rs = (ResultSet) s
+					.executeQuery("select * from customer where un = '" + uname +"'");
 			
+			PrintWriter printWriter = response.getWriter();
+
 			while (rs.next()) {
 				HttpSession session = request.getSession();
-				
+
 				String table_uname = rs.getString("un");
 				String table_fname = rs.getString("fn");
 				String table_lname = rs.getString("ln");
-				String table_pass = rs.getString("pass");
-				
-				session.setAttribute("fn", table_fname);
-				session.setAttribute("ln", table_lname);
-				session.setAttribute("un", table_uname);
-				session.setAttribute("passwd", table_pass);
+				String table_pass = rs.getString("passwd");
 				
 				
+				
+				if (uname.equals(table_uname) && passwd.equals(table_pass)) {
+					session.setAttribute("fn", table_fname);
+					session.setAttribute("ln", table_lname);
+					session.setAttribute("un", table_uname);
+					session.setAttribute("passwd", table_pass);
+					response.sendRedirect("search_user.jsp");
+					printWriter.print("user successfully logged in!");
+				} else {
+					response.sendRedirect("Register.jsp");
+					printWriter.print("Username or passoword Incorrect!");
+				}
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// Class.forName("com.mysql.jdbc.Driver");
- catch (SQLException e) {
+		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
