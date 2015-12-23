@@ -1,0 +1,4 @@
+This file is added in 'second' branch.
+This file should be merged back to 'main' branch. 
+After merging back, the file will be added to original project. 
+Until then no any changes are made in 'main' branch and all changes are performed in 'second' branch.
